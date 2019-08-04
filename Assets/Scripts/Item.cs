@@ -34,4 +34,68 @@ public class Item : MonoBehaviour
     {
         
     }
+
+    public void Use(int character)
+    {
+        CharacterStats stats = GameManager.instance.charactersStats[character];
+
+        if (isItem)
+        {
+            if (affectHp)
+            {
+                stats.hp += amountAffect;
+
+                if (stats.hp > stats.maxHp)
+                {
+                    stats.hp = stats.maxHp;
+                }
+
+                Debug.Log(stats);
+            }
+
+            if (affectMp)
+            {
+                stats.mp += amountAffect;
+
+                if (stats.mp > stats.maxMp)
+                {
+                    stats.mp = stats.maxMp;
+                }
+            }
+
+            if (affectStrength)
+            {
+                stats.strength += amountAffect;
+            }
+
+            if (affectConsitution)
+            {
+                stats.constitution += amountAffect;
+            }
+        }
+
+        if (isWeapon)
+        {
+            if (stats.weapon != "")
+            {
+                GameManager.instance.AddItem(stats.weapon);
+            }
+
+            stats.weapon = name;
+            stats.weaponPower = weaponPower;
+        }
+
+        if (isArmor)
+        {
+            if (stats.armor != "")
+            {
+                GameManager.instance.AddItem(stats.armor);
+            }
+
+            stats.armor = name;
+            stats.armorPower = armorPower;
+        }
+
+        GameManager.instance.RemoveItem(name);
+    }
 }

@@ -15,12 +15,16 @@ public class GameManager : MonoBehaviour
     public int[] itemsCount;
     public Item[] items;
 
+    public int gils;
+
     // Start is called before the first frame update
     void Start()
     {
         instance = this;
 
         DontDestroyOnLoad(gameObject);
+
+        SortItems();
     }
 
     // Update is called once per frame
@@ -32,6 +36,16 @@ public class GameManager : MonoBehaviour
         } else
         {
             PlayerController.instance.canMove = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            AddItem("Heavy Armor");
+            AddItem("Potion");
+            AddItem("Blabla");
+
+            RemoveItem("Ether");
+            RemoveItem("Ahah");
         }
     }
 
@@ -72,6 +86,78 @@ public class GameManager : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    public void AddItem(string item)
+    {
+        int position = 0;
+        bool foundSpace = false;
+
+        for (int i = 0; i < itemsOwned.Length; i++)
+        {
+            if (itemsOwned[i] == "" || itemsOwned[i] == item)
+            {
+                position = i;
+                foundSpace = true;
+                i = itemsOwned.Length;
+            }
+        }
+
+        if (foundSpace)
+        {
+            bool exists = false;
+
+            for (int i = 0; i < items.Length; i++)
+            {
+                if (items[i].name == item)
+                {
+                    exists = true;
+                    i = items.Length;
+                }
+            }
+
+            if (exists)
+            {
+                itemsOwned[position] = item;
+                itemsCount[position]++;
+
+                Menu.instance.ShowItems();
+            } else
+            {
+                Debug.LogError("Hmmm, nop, that object not exists : " + item);
+            }
+        }
+    }
+
+    public void RemoveItem(string item)
+    {
+        int position = 0;
+        bool found = false;
+
+        for (int i = 0; i < itemsOwned.Length; i++)
+        {
+            if (itemsOwned[i] == "" || itemsOwned[i] == item)
+            {
+                position = i;
+                found = true;
+                i = itemsOwned.Length;
+            }
+        }
+
+        if (found)
+        {
+            itemsCount[position]--;
+
+            if (itemsCount[position] <= 0)
+            {
+                itemsOwned[position] = "";
+            }
+
+            Menu.instance.ShowItems();
+        } else
+        {
+            Debug.LogError("Hmmm, nop, could'nt find : " + item);
         }
     }
 }
