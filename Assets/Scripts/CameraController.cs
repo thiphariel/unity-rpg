@@ -16,6 +16,9 @@ public class CameraController : MonoBehaviour
     private float halfHeight;
     private float halfWidth;
 
+    public int music;
+    private bool isMusicStarted;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,6 +39,15 @@ public class CameraController : MonoBehaviour
     // LateUpdate is called once per frame after Update
     void LateUpdate()
     {
-        transform.position = new Vector3(Mathf.Clamp(target.position.x, min.x, max.x), Mathf.Clamp(target.position.y, min.y, max.y), transform.position.z);
+        if (target)
+		{
+			transform.position = new Vector3(Mathf.Clamp(target.position.x, min.x, max.x), Mathf.Clamp(target.position.y, min.y, max.y), transform.position.z);
+		}
+
+		if (!isMusicStarted)
+        {
+            isMusicStarted = true;
+            AudioManager.instance.PlayMusic(music);
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Menu : MonoBehaviour
 {
@@ -54,6 +55,8 @@ public class Menu : MonoBehaviour
             {
                 CloseMenu();
             }
+
+            AudioManager.instance.PlaySfx(5);
         }
     }
 
@@ -242,4 +245,25 @@ public class Menu : MonoBehaviour
         active.Use(character);
         CloseCharacterSelection();
     }
+
+    public void SaveGame()
+    {
+        GameManager.instance.SaveData();
+        QuestManager.instance.SaveQuestData();
+    }
+
+    public void PlayMenuSound()
+    {
+        AudioManager.instance.PlaySfx(4);
+    }
+
+    public void Quit()
+	{
+		SceneManager.LoadScene("MainMenu");
+
+		Destroy(GameManager.instance.gameObject);
+        Destroy(PlayerController.instance.gameObject);
+        Destroy(AudioManager.instance.gameObject);
+        Destroy(gameObject);
+	}
 }

@@ -17,6 +17,10 @@ public class DialogManager : MonoBehaviour
 
     public static DialogManager instance;
 
+    private string quest;
+    private bool complete;
+    private bool shouldUpdateQuest;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -38,6 +42,19 @@ public class DialogManager : MonoBehaviour
                     {
                         dialogBox.SetActive(false);
                         GameManager.instance.isDialogOpen = false;
+
+                        if (shouldUpdateQuest)
+                        {
+                            shouldUpdateQuest = false;
+
+                            if (complete)
+                            {
+                                QuestManager.instance.CompleteQuest(quest);
+                            } else
+                            {
+                                QuestManager.instance.ImcompleteQuest(quest);
+                            }
+                        }
                     }
                     else
                     {
@@ -76,5 +93,13 @@ public class DialogManager : MonoBehaviour
             name.text = dialogLines[line].Replace("n-", "");
             line++;
         }
+    }
+
+    public void ActivateQuest(string quest, bool complete)
+    {
+        this.quest = quest;
+        this.complete = complete;
+
+        shouldUpdateQuest = true;
     }
 }

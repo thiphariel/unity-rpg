@@ -10,7 +10,7 @@ public class Item : MonoBehaviour
 	public bool isArmor;
 
     [Header("Item details")]
-	public string name;
+    public new string name;
 	public string description;
 	public int price;
 	public Sprite sprite;

@@ -47,3 +47,5 @@ MonoBehaviour:
     type: 3}
   player: {fileID: 7820213607444369751, guid: 1b4889cc0a49e47c8912f24037e452ac, type: 3}
   manager: {fileID: 8302520858524126889, guid: 6263ac95fc8d44f71b37eeff1a09fe1e, type: 3}
+  audioManager: {fileID: 7556587716681173798, guid: bc3de037fdc1e4c81be743e4a5cd1f6e,
+    type: 3}

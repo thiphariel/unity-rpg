@@ -7,6 +7,7 @@ public class Loader : MonoBehaviour
     public GameObject fadeScreen;
     public GameObject player;
     public GameObject manager;
+    public GameObject audioManager;
 
     // Start is called before the first frame update
     void Start()
@@ -23,7 +24,12 @@ public class Loader : MonoBehaviour
 
         if (!GameManager.instance)
         {
-            Instantiate(manager);
+            GameManager.instance = Instantiate(manager).GetComponent<GameManager>();
+        }
+
+        if (!AudioManager.instance)
+        {
+            AudioManager.instance = Instantiate(audioManager).GetComponent<AudioManager>();
         }
     }
 

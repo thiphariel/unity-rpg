@@ -9,6 +9,11 @@ public class DialogActivator : MonoBehaviour
 
     private bool canDialog;
 
+    [Header("Quest")]
+    public bool active;
+    public string quest;
+    public bool complete;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -18,9 +23,10 @@ public class DialogActivator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (canDialog && Input.GetButtonUp("Fire1") && !DialogManager.instance.dialogBox.activeInHierarchy)
+        if (canDialog && Input.GetKeyDown(KeyCode.C) && !DialogManager.instance.dialogBox.activeInHierarchy)
         {
             DialogManager.instance.ShowDialog(lines, isPerson);
+            DialogManager.instance.ActivateQuest(quest, complete);
         }
     }
 

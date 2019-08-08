@@ -23,9 +23,25 @@ public class MenuItem : MonoBehaviour
 
     public void Click()
     {
-        if (GameManager.instance.itemsOwned[position] != "")
+        if (Menu.instance.menu.activeInHierarchy)
         {
-            Menu.instance.SelectItem(GameManager.instance.GetItem(GameManager.instance.itemsOwned[position]));
+            if (GameManager.instance.itemsOwned[position] != "")
+            {
+                Menu.instance.SelectItem(GameManager.instance.GetItem(GameManager.instance.itemsOwned[position]));
+            }
+        }
+
+        if (Shop.instance.menu.activeInHierarchy)
+        {
+            if (Shop.instance.buy.activeInHierarchy)
+            {
+                Shop.instance.SelectBuyItem(GameManager.instance.GetItem(Shop.instance.sellItems[position]));
+            }
+
+            if (Shop.instance.sell.activeInHierarchy)
+            {
+                Shop.instance.SelectSellItem(GameManager.instance.GetItem(GameManager.instance.itemsOwned[position]));
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class GameManager : MonoBehaviour
     public bool isMenuOpen;
     public bool isDialogOpen;
     public bool isLoading;
+    public bool isShopping;
+    public bool isBattle;
 
     public string[] itemsOwned;
     public int[] itemsCount;
@@ -30,7 +33,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isMenuOpen || isDialogOpen || isLoading)
+        if (isMenuOpen || isDialogOpen || isLoading || isShopping || isBattle)
         {
             PlayerController.instance.canMove = false;
         } else
@@ -46,6 +49,16 @@ public class GameManager : MonoBehaviour
 
             RemoveItem("Ether");
             RemoveItem("Ahah");
+        }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            LoadData();
+        }
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            SaveData();
         }
     }
 
@@ -158,6 +171,89 @@ public class GameManager : MonoBehaviour
         } else
         {
             Debug.LogError("Hmmm, nop, could'nt find : " + item);
+        }
+    }
+
+    public void SaveData()
+    {
+        Vector3 postiion = PlayerController.instance.transform.position;
+
+        PlayerPrefs.SetString("Scene", SceneManager.GetActiveScene().name);
+        PlayerPrefs.SetFloat("Player_x", postiion.x);
+        PlayerPrefs.SetFloat("Player_y", postiion.y);
+        PlayerPrefs.SetFloat("Player_z", postiion.z);
+
+        // Save Players stats
+        for (int i = 0; i < charactersStats.Length; i++)
+        {
+            CharacterStats stats = charactersStats[i];
+
+            Debug.Log("Char " + stats.name + " is active ? " + stats.gameObject.activeInHierarchy);
+
+            PlayerPrefs.SetInt("Player_" + stats.name + "_active", stats.gameObject.activeInHierarchy ? 1 : 0);
+
+            PlayerPrefs.SetInt("Player_" + stats.name + "_exp", stats.exp);
+            PlayerPrefs.SetInt("Player_" + stats.name + "_level", stats.level);
+
+            PlayerPrefs.SetInt("Player_" + stats.name + "_hp", stats.hp);
+            PlayerPrefs.SetInt("Player_" + stats.name + "_maxHp", stats.maxHp);
+            PlayerPrefs.SetInt("Player_" + stats.name + "_mp", stats.mp);
+            PlayerPrefs.SetInt("Player_" + stats.name + "_maxMp", stats.maxMp);
+
+            PlayerPrefs.SetInt("Player_" + stats.name + "_strength", stats.strength);
+            PlayerPrefs.SetInt("Player_" + stats.name + "_constitution", stats.constitution);
+
+            PlayerPrefs.SetInt("Player_" + stats.name + "_weaponPower", stats.weaponPower);
+            PlayerPrefs.SetInt("Player_" + stats.name + "_armorPower", stats.armorPower);
+            PlayerPrefs.SetString("Player_" + stats.name + "_weapon", stats.weapon);
+            PlayerPrefs.SetString("Player_" + stats.name + "_armor", stats.armor);
+        }
+
+        // Save inventory
+        for (int i = 0; i < itemsOwned.Length; i++)
+        {
+            PlayerPrefs.SetString("ItemOwned_" + i, itemsOwned[i]);
+            PlayerPrefs.SetInt("ItemCount_" + i, itemsCount[i]);
+        }
+    }
+
+    public void LoadData()
+    {
+        float x = PlayerPrefs.GetFloat("Player_x");
+        float y = PlayerPrefs.GetFloat("Player_y");
+        float z = PlayerPrefs.GetFloat("Player_z");
+
+        PlayerController.instance.transform.position = new Vector3(x, y, z);
+
+        // Load Players stats
+        for (int i = 0; i < charactersStats.Length; i++)
+        {
+            CharacterStats stats = charactersStats[i];
+
+            stats.gameObject.SetActive(PlayerPrefs.GetInt("Player_" + stats.name + "_active") == 1 ? true : false);
+
+            stats.exp = PlayerPrefs.GetInt("Player_" + stats.name + "_exp");
+            stats.level = PlayerPrefs.GetInt("Player_" + stats.name + "_level");
+
+            stats.hp = PlayerPrefs.GetInt("Player_" + stats.name + "_hp");
+            stats.maxHp = PlayerPrefs.GetInt("Player_" + stats.name + "_maxHp");
+            stats.mp = PlayerPrefs.GetInt("Player_" + stats.name + "_mp");
+            stats.maxMp = PlayerPrefs.GetInt("Player_" + stats.name + "_maxMp");
+
+            stats.strength = PlayerPrefs.GetInt("Player_" + stats.name + "_strength");
+            stats.constitution = PlayerPrefs.GetInt("Player_" + stats.name + "_constitution");
+
+            stats.weaponPower = PlayerPrefs.GetInt("Player_" + stats.name + "_weaponPower");
+            stats.armorPower = PlayerPrefs.GetInt("Player_" + stats.name + "_armorPower");
+            stats.weapon = PlayerPrefs.GetString("Player_" + stats.name + "_weapon");
+            stats.armor = PlayerPrefs.GetString("Player_" + stats.name + "_armor");
+        }
+
+        // Load inventory
+        for (int i = 0; i < itemsOwned.Length; i++)
+        {
+            itemsOwned[i] = PlayerPrefs.GetString("ItemOwned_" + i);
+            itemsCount[i] = PlayerPrefs.GetInt("ItemCount_" + i);
         }
     }
 }
